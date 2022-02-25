@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Modules\Posts\Http\Controllers\CompanyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +17,9 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/posts', function (Request $request) {
     return $request->user();
+});
+
+/*Companies*/
+Route::prefix('api')->group(function(){
+    Route::get('company', [CompanyController::class, 'index']);
 });
