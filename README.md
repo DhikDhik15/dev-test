@@ -1,5 +1,4 @@
 # dev-test
-Laravel dev-test
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
@@ -8,7 +7,7 @@ Laravel dev-test
 How to run project:
 
 - php Dasar :
-    - cd /var/www/html/Transisi-test/phpDasar
+    - cd /var/www/html/dev-test/phpDasar
 - Laravel Dasar :
     - composer install
     - composer update
@@ -16,6 +15,9 @@ How to run project:
     - npm run dev
     - php artisan migrate:fresh --seed
     - php artisan serve
+- Laravel Modules
+    - https://docs.laravelmodules.com/v9/artisan-commands
+    - follow the step
 
 ## Requirement code
 
