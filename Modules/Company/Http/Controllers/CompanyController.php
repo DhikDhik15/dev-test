@@ -83,17 +83,24 @@ class CompanyController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Company $company)
     {
-        $this->validate($request, [
-            'name' => 'required',
+        $validator = Validator::make($request->all(),[
+            'name' => 'required|string|max:255',
             'email' => 'required|email',
             'website' => 'required',
         ]);
 
-        $company = Company::find($id);
-        $company->update($request->all());
-        return response()->json(['message' => 'Company Updated']);
+        if($validator->fails()){
+            return response()->json($validator->errors());
+        }
+
+        $company->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'website' => $request->website,
+        ]);
+        return response()->json(['message' => 'Company Updated', new CompanyResource($company)]);
     }
 
     /**
