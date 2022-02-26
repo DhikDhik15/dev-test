@@ -23,13 +23,12 @@ class CompanyController extends Controller
     public function index()
     {
         $companies = Company::with('logo')->simplePaginate(5);
-
-        return view('admin.company.index', compact('companies'));
+        return response()->json($companies); 
     }
 
     public function create()
     {
-        return view('admin.company.create');
+        return response()->json($company);
     }
 
     public function store(CompanyRequest $request, CompanyService $companyService)
@@ -42,8 +41,8 @@ class CompanyController extends Controller
     public function show(Company $company)
     {
         $company->load(['logo', 'employees']);
-
-        return view('admin.company.show', compact('company'));
+        return response()->json($company);
+        // return view('admin.company.show', compact('company'));
     }
 
     public function edit(Company $company)

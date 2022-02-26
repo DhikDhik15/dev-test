@@ -1,3 +1,5 @@
 {
-    "Posts": true
+    "Posts": false,
+    "Employee": true,
+    "Company": true
 }
