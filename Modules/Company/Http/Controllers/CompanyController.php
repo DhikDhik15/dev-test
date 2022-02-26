@@ -6,6 +6,8 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Company\Entities\Company;
+use Validator;
+use Modules\Company\Transformers\CompanyResource;
 
 class CompanyController extends Controller
 {
@@ -35,13 +37,22 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required',
+        $validator = Validator::make($request->all(),[
+            'name' => 'required|string|max:255',
             'email' => 'required|email',
             'website' => 'required',
         ]);
-        return Company::create($request->all());
-        return response()->json(['message' => 'Company Created']);
+
+        if($validator->fails()){
+            return response()->json($validator->errors());
+        }
+
+        $company = Company::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'website' => $request->website,
+        ]);
+        return response()->json(['message' => 'Company Created', new CompanyResource($company)]);
     }
     /**
      * Show the specified resource.
@@ -63,7 +74,7 @@ class CompanyController extends Controller
      */
     public function edit($id)
     {
-        return view('company::edit');
+        return response()->json(['message' => 'Edit Company']);
     }
 
     /**
