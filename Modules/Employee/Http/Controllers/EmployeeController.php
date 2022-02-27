@@ -6,6 +6,8 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Employee\Entities\Employee;
+use Validator;
+use Modules\Employee\Transformers\EmployeeResource;
 
 class EmployeeController extends Controller
 {
@@ -15,7 +17,8 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        return view('employee::index');
+        $employies = Employee::latest()->get();
+        return response()->json($employies);
     }
 
     /**
@@ -24,7 +27,7 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        return view('employee::create');
+        return response()->json(['message' => 'Employee added']);
     }
 
     /**
@@ -34,7 +37,22 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'company_id' => 'required',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors());
+        }
+
+        $employee = Employee::create([
+            'company_id' => $request->company_id,
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
+        return response()->json(['message' => 'Employee Created', new EmployeeResource($employee)]);
     }
 
     /**
@@ -44,7 +62,10 @@ class EmployeeController extends Controller
      */
     public function show($id)
     {
-        return view('employee::show');
+        $employee = Employee::find($id);
+        return response()->json([
+            'employee' => $employee
+        ]);
     }
 
     /**
@@ -54,7 +75,7 @@ class EmployeeController extends Controller
      */
     public function edit($id)
     {
-        return view('employee::edit');
+        return response()->json(['message' => 'Edit Employee']);
     }
 
     /**
@@ -63,9 +84,24 @@ class EmployeeController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Employee $employee)
     {
-        //
+        $validator = Validator::make($request->all(),[
+            'company_id' => 'required',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors());
+        }
+
+        $employee->update([
+            'company_id' => $request->company_id,
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
+        return response()->json(['message' => 'Employee Updated', new EmployeeResource($employee)]);
     }
 
     /**
@@ -75,6 +111,8 @@ class EmployeeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $employee = Employee::find($id);
+        $employee->delete();
+        return response()->json(['message' => 'Company Deleted']);
     }
 }

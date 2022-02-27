@@ -16,8 +16,8 @@ class Company extends Model
         return \Modules\Company\Database\factories\CompanyFactory::new();
     }
 
-    public function company()
-    {
-        return $this->belongsTo(Company::class, 'company_id');
-    }
+    // public function company()
+    // {
+    //     return $this->belongsTo(Company::class, 'company_id');
+    // }
 }

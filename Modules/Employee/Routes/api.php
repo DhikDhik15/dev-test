@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Modules\Employee\Controllers\EmployeeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,4 +16,6 @@ use Modules\Employee\Controllers\EmployeeController;
 Route::middleware('auth:api')->get('/employee', function (Request $request) {
     return $request->user();
 });
+
+Route::resource('/employee', EmployeeController::class);
 

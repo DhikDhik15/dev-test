@@ -3,6 +3,7 @@
 namespace Modules\Employee\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\Company\Entities\Company;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Employee extends Model
@@ -11,6 +12,7 @@ class Employee extends Model
 
     protected $fillable = [
         'name',
+        'company_id',
         'email'
     ];
     
@@ -21,6 +23,6 @@ class Employee extends Model
 
     public function company()
     {
-        return $this->belongsTo(Company::class, 'company_id');
+        return $this->hasOne(Company::class, 'company_id');
     }
 }
