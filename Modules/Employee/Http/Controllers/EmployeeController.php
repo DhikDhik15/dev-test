@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Employee\Entities\Employee;
 use Validator;
+use Illuminate\Support\Facades\DB;
 use Modules\Employee\Transformers\EmployeeResource;
 
 class EmployeeController extends Controller
@@ -17,7 +18,11 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $employies = Employee::latest()->get();
+        $employies = Employee::with('company')->simplePaginate(5);
+        // $employies = DB::table('employees')
+        //     ->join('companies', 'employees.company_id', '=', 'companies.id')
+        //     ->select('employees.*','companies.name as company_name','companies.email as company_email','companies.website as website')
+        //     ->paginate(5);
         return response()->json($employies);
     }
 

@@ -4,7 +4,9 @@ namespace Modules\Employee\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Modules\Company\Entities\Company;
+use Modules\Employee\Entities\Employee;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 
 class Employee extends Model
 {
@@ -23,6 +25,7 @@ class Employee extends Model
 
     public function company()
     {
-        return $this->hasOne(Company::class, 'company_id');
+        
+        return $this->belongsTo(Company::class, 'company_id');
     }
 }
