@@ -18,4 +18,3 @@ Route::middleware('auth:api')->get('/employee', function (Request $request) {
 });
 
 Route::resource('/employee', EmployeeController::class);
-

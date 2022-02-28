@@ -18,11 +18,14 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $employies = Employee::with('company')->simplePaginate(5);
-        // $employies = DB::table('employees')
-        //     ->join('companies', 'employees.company_id', '=', 'companies.id')
-        //     ->select('employees.*','companies.name as company_name','companies.email as company_email','companies.website as website')
-        //     ->paginate(5);
+        // $employies = Employee::with('company')->simplePaginate(5);
+        $employies = DB::table('employees')
+            ->join('companies', 'employees.company_id', '=', 'companies.id')
+            ->join('status', 'employees.status', '=', 'status.id')
+            ->select(
+                ['employees.*','companies.name as company_name','companies.email as company_email','companies.website as website','status.name as status_name']
+            )
+            ->paginate(5);
         return response()->json($employies);
     }
 
@@ -55,7 +58,7 @@ class EmployeeController extends Controller
         $employee = Employee::create([
             'company_id' => $request->company_id,
             'name' => $request->name,
-            'email' => $request->email,
+            'email' => $request->email
         ]);
         return response()->json(['message' => 'Employee Created', new EmployeeResource($employee)]);
     }
@@ -67,10 +70,18 @@ class EmployeeController extends Controller
      */
     public function show($id)
     {
-        $employee = Employee::find($id);
-        return response()->json([
-            'employee' => $employee
-        ]);
+        // $employee = Employee::find($id);
+        $employee = DB::table('employees')
+        ->join('companies', 'employees.company_id', '=', 'companies.id')
+        ->join('status', 'employees.status', '=', 'status.id')
+        ->where('employees.id', $id)
+        ->select(
+            ['employees.*','companies.name as company_name','companies.email as company_email','companies.website as website','status.name as status_name']
+        )
+        ->first();
+
+        return response()->json($employee);
+
     }
 
     /**
@@ -107,6 +118,22 @@ class EmployeeController extends Controller
             'email' => $request->email,
         ]);
         return response()->json(['message' => 'Employee Updated', new EmployeeResource($employee)]);
+    }
+
+    public function patch (Request $request, Employee $employies)
+    {
+        $validator = Validator::make($request->all(),[
+            'status' => 'number',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors());
+        }
+
+        $employies->update([
+            'status' => $request->status,
+        ]);
+        return response()->json(['message' => 'Status Employee Updated', new EmployeeResource($employee)]);
     }
 
     /**
