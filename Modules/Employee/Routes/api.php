@@ -13,8 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/employee', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/employee', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::resource('/employee', EmployeeController::class);
+Route::get('/employee-export', 'EmployeeController@viewPDF');
