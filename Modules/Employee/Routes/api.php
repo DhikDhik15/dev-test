@@ -18,4 +18,4 @@ use Illuminate\Http\Request;
 // });
 
 Route::resource('/employee', EmployeeController::class);
-Route::get('/employee-export', 'EmployeeController@viewPDF');
+Route::get('/employee-export', 'EmployeeController@viewPDF')->name('employee.export');
