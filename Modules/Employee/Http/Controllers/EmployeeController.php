@@ -9,6 +9,9 @@ use Modules\Employee\Entities\Employee;
 use Modules\Employee\Entities\Status;
 use Modules\Employee\Services\EmployeeService;
 use Validator;
+use Modules\Employee\Imports\EmployeeImport;
+use Modules\Employee\Exports\EmployeeExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use Modules\Employee\Transformers\EmployeeResource;
@@ -154,5 +157,29 @@ class EmployeeController extends Controller
         view()->share('employee', $employies);
         $pdf = \PDF::loadView('employee::employeePDF', compact('employies'));
         return $pdf->stream('ReportEmployee.pdf');
+    }
+
+    public function importExcel(Request $request)
+    {
+        /*validate*/
+        $validator = Validator::make($request->all(),[
+            'file' => 'required|mimes:xls,xlsx'
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+        /*get file*/ 
+        $file = $request->file('file');
+        /*save file*/
+        $file->move('excel', $file->getClientOriginalName());
+        /*import file*/
+        Excel::import(new EmployeeImport, public_path('/excel/'.$file->getClientOriginalName()));
+        return response()->json(['message' => 'Employee Imported']);
+        
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(new EmployeeExport, 'Employee.xlsx');
     }
 }
