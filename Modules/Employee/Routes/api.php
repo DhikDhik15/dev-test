@@ -21,3 +21,4 @@ Route::resource('/employee', EmployeeController::class);
 Route::get('/employee-export', 'EmployeeController@viewPDF')->name('employee.export');
 Route::post('/import-excel', 'EmployeeController@importExcel')->name('employee.import');
 Route::get('/export-excel', 'EmployeeController@exportExcel')->name('employee.export');
+Route::get('/send-mail', 'EmployeeController@sendMail')->name('employee.email');

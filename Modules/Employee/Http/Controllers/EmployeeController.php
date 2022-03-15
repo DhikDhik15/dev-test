@@ -15,6 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use Modules\Employee\Transformers\EmployeeResource;
+use Modules\Employee\Jobs\EmployeeJob;
 
 class EmployeeController extends Controller
 {
@@ -181,5 +182,18 @@ class EmployeeController extends Controller
     public function exportExcel()
     {
         return Excel::download(new EmployeeExport, 'Employee.xlsx');
+    }
+
+    public function sendMail()
+    {
+        $detail['to'] = 'test@mail.com';
+        $detail['name'] = 'User';
+        $detail['subject'] = 'Hallo';
+        $detail['message'] = 'This is message';
+
+        EmployeeJob::dispatch($detail)
+            ->delay(now()->addMinutes(5));
+
+        return response()->json(['message' => 'Mail Sent']);
     }
 }
